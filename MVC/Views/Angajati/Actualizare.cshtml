@@ -1,0 +1,18 @@
+﻿@model List<UpdateAngajatViewModel>
+
+@{
+    ViewData["Title"] = "Actualizare Angajati";
+}
+
+<h2>Actualizare Angajati</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+
+<!-- Render the search form partial view -->
+@await Html.PartialAsync("_SearchForm")
+@await Html.PartialAsync("_EditableTable", Model)

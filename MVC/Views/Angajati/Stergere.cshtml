@@ -1,0 +1,13 @@
+﻿@model List<AngajatViewModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Ștergere Angajati</h2>
+
+<!-- Render the search form partial view -->
+@await Html.PartialAsync("_SearchForm")
+@await Html.PartialAsync("_DeleteAngajati", Model)
+

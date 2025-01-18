@@ -1,0 +1,167 @@
+﻿@if (Model.Count > 0)
+{
+    <form id="angajatiForm">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nume</th>
+                    <th>Prenume</th>
+                    <th>Functie</th>
+                    <th>Salar Baza</th>
+                    <th>Spor Procentual</th>
+                    <th>Premii Brute</th>
+                    <th>Retineri</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" name="updatedAngajati[@i].Id" value="@Model[i].Id" />
+                            <input type="text" name="updatedAngajati[@i].Nume" class="form-control" value="@Model[i].Nume" />
+                        </td>
+                        <td>
+                            <input type="text" name="updatedAngajati[@i].Prenume" class="form-control" value="@Model[i].Prenume" />
+                        </td>
+                        <td>
+                            <input type="text" name="updatedAngajati[@i].Functie" class="form-control" value="@Model[i].Functie" />
+                        </td>
+                        <td>
+                            <input type="number" name="updatedAngajati[@i].SalarBaza" class="form-control" value="@Model[i].SalarBaza" />
+                        </td>
+                        <td>
+                            <input type="number" name="updatedAngajati[@i].SporProcentual" class="form-control" value="@Model[i].SporProcentual" />
+                        </td>
+                        <td>
+                            <input type="number" name="updatedAngajati[@i].PremiiBrute" class="form-control" value="@Model[i].PremiiBrute" />
+                        </td>
+                        <td>
+                            <input type="number" name="updatedAngajati[@i].Retineri" class="form-control" value="@Model[i].Retineri" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-success" onclick="saveChanges()">Save Changes</button>
+    </form>
+    <div id="errorContainer"></div>
+    
+    <div id="notificationContainer" style="display: none;" class="alert" role="alert"></div>
+}
+else
+{
+    var searchTerm = Context.Request.Query["searchTerm"].ToString();
+
+    @if (!string.IsNullOrWhiteSpace(searchTerm))
+    {
+        <p>Niciun angajat gasit</p>
+    }
+}
+
+<script>
+    async function saveChanges() {
+        clearErrors(); // Clear previous errors
+        const form = document.getElementById('angajatiForm');
+        const formData = new FormData(form);
+        
+        const jsonData = Array.from(formData.entries()).reduce((acc, [key, value]) => {
+            const match = key.match(/updatedAngajati\[(\d+)\]\.(.+)/);
+            if (match) {
+                const index = parseInt(match[1], 10);
+                const field = match[2];
+
+                acc[index] = acc[index] || {};
+                acc[index][field] = value;
+            }
+            return acc;
+        }, []);
+        
+        try {
+            const response = await fetch('/Angajati/SaveChanges', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData),
+            });
+            
+            if (!response.ok) {
+                // Handle errors
+                const errorText = await response.text(); // Get raw response if it's not JSON
+                
+                const errorJson = JSON.parse(errorText);
+                console.log(errorJson);
+                displayErrors(errorJson.errors);
+                showNotification('danger', 'Save failed.');
+            }else 
+            {
+                const result = await response.json();
+                showNotification('success', result.message || 'Changes saved successfully!');
+            }
+            
+
+        } catch (error) {
+            console.error('An error occurred:', error.message);
+            showNotification('danger', 'An unexpected error occurred. Please try again.');
+        }
+    }
+
+    function displayErrors(errors) {
+
+        clearErrors(); // Clear previous errors
+
+        // Process and display errors
+        errors.forEach((error) => {
+            const fieldName = error.field; // e.g., "updatedAngajati[0].Nume"
+            const errorMessages = error.errors.join(', '); // Combine multiple error messages for the field
+
+            console.log(fieldName);
+            // Find the input field using the name attribute
+            const inputField = document.querySelector(`input[name="updatedAngajati${fieldName}"]`);
+
+            console.log(inputField);
+            console.log(`input[name="updatedAngajati${fieldName}]"`);
+            
+            if (inputField) {
+                // Add Bootstrap's 'is-invalid' class to highlight the field
+                inputField.classList.add('is-invalid');
+
+                // Create and insert an error message span below the input
+                const errorSpan = document.createElement('span');
+                errorSpan.className = 'error-message text-danger small'; // Style for the error message
+                errorSpan.innerText = errorMessages;
+
+                // Insert the error message after the input field
+                inputField.parentNode.appendChild(errorSpan);
+            }
+        });
+    }
+
+    function clearErrors() {
+        // Clear previous error highlights and messages
+        document.querySelectorAll('.form-control').forEach((input) => {
+            input.classList.remove('is-invalid'); // Remove error highlight
+        });
+
+        document.querySelectorAll('.error-message').forEach((errorSpan) => {
+            errorSpan.remove(); // Remove any previous error messages
+        });
+    }
+
+    function showNotification(type, message) {
+        const notificationContainer = document.getElementById('notificationContainer');
+        notificationContainer.style.display = 'block';
+
+        // Set the alert class based on the type (Bootstrap classes)
+        notificationContainer.className = `alert alert-${type}`; // 'alert-success' or 'alert-danger'
+        notificationContainer.textContent = message;
+
+        // Automatically hide the notification after 5 seconds
+        setTimeout(() => {
+            notificationContainer.style.display = 'none';
+        }, 5000);
+    }
+
+
+</script>

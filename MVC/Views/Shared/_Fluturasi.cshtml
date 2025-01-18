@@ -1,0 +1,133 @@
+﻿@model List<MVC.Entities.Angajat>
+
+<style>
+    .payroll-detail-card {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+        padding: 20px;
+        background: #fff;
+    }
+
+    .employee-section {
+        margin-bottom: 30px;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 20px;
+    }
+
+    .employee-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .employee-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    .data-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+    .label {
+        font-weight: normal;
+        color: #666;
+    }
+
+    .value {
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .date-header {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .employee-number {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .highlighted-value {
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+</style>
+
+<div class="payroll-detail-card">
+    @foreach (var employee in Model)
+    {
+        <div class="employee-section">
+            <div class="date-header">DATA: @DateTime.Now.ToShortDateString()</div>
+            <div class="employee-number">NR.CRT: @employee.Id</div>
+            
+            <div class="employee-grid">
+                <div class="left-column">
+                    <div class="data-row">
+                        <span class="label">NUME</span>
+                        <span class="value">@employee.Nume</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">PRENUME</span>
+                        <span class="value">@employee.Prenume</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">FUNCTIE</span>
+                        <span class="value">@employee.Functie</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">SALAR_BAZA</span>
+                        <span class="value">@employee.SalarBaza.ToString("N0")</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">SPOR_%</span>
+                        <span class="value">@employee.SporProcentual</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">PREMII_BRUTE</span>
+                        <span class="value">@employee.PremiiBrute.ToString("N0")</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">TOTAL_BRUT</span>
+                        <span class="value">@employee.TotalBrut.ToString("N0")</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">BRUT_IMPOZABIL</span>
+                        <span class="value">@employee.BrutImpozitabil.ToString("N0")</span>
+                    </div>
+                </div>
+                <div class="right-column">
+                    <div class="data-row">
+                        <span class="label">IMPOZIT</span>
+                        <span class="value">@employee.Impozit.ToString("N0")</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">CAS (25%)</span>
+                        <span class="value">@employee.CAS.ToString("N0")</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">CAS (25%)</span>
+                        <span class="value">@employee.CASS.ToString("N0")</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">RETINERI</span>
+                        <span class="value">@employee.Retineri.ToString("N0")</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">VIRAT_CARD</span>
+                        <span class="value highlighted-value">@employee.ViratCard.ToString("N0")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

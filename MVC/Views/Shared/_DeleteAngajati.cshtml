@@ -1,0 +1,86 @@
+﻿@model List<AngajatViewModel>
+
+@if (Model.Count > 0)
+{
+    <form id="deleteAngajatiForm">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Select</th>
+                <th>Nume</th>
+                <th>Prenume</th>
+                <th>Functie</th>
+                <th>Salar Baza</th>
+            </tr>
+            </thead>
+            <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="selectedIds" value="@Model[i].Id" />
+                    </td>
+                    <td>@Model[i].Nume</td>
+                    <td>@Model[i].Prenume</td>
+                    <td>@Model[i].Functie</td>
+                    <td>@Model[i].SalarBaza</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-danger" onclick="deleteSelectedAngajati()">Delete Selected</button>
+    </form>
+    <div id="deleteNotificationContainer"></div>
+}
+else
+{
+    <p>No employees available for deletion.</p>
+}
+
+<script>
+    async function deleteSelectedAngajati() {
+        const form = document.getElementById('deleteAngajatiForm');
+        const formData = new FormData(form);
+        const selectedIds = formData.getAll('selectedIds');
+
+        if (selectedIds.length === 0) {
+            showDeleteNotification('warning', 'No employees selected for deletion.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/Angajati/DeleteMultiple', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(selectedIds),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                showDeleteNotification('danger', result.message || 'Deletion failed.');
+                return;
+            }
+
+            showDeleteNotification('success', result.message || 'Selected employees deleted successfully!');
+            setTimeout(() => location.reload(), 2000); // Reload to refresh the table
+        } catch (error) {
+            console.error('An error occurred:', error.message);
+            showDeleteNotification('danger', 'An unexpected error occurred. Please try again.');
+        }
+    }
+
+    function showDeleteNotification(type, message) {
+        const notificationContainer = document.getElementById('deleteNotificationContainer');
+        notificationContainer.style.display = 'block';
+        notificationContainer.className = `alert alert-${type}`; // 'alert-success' or 'alert-danger'
+        notificationContainer.textContent = message;
+
+        setTimeout(() => {
+            notificationContainer.style.display = 'none';
+        }, 5000);
+    }
+
+</script>

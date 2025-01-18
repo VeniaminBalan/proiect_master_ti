@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - MVC</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/MVC.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/navbar-background.css" asp-append-version="true"/>
 </head>
 <body>
 <header>
@@ -23,8 +23,38 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dataEntryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            INTRODUCERE DATE
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dataEntryDropdown">
+                            <li><a class="dropdown-item" href="@Url.Action("Actualizare", "Angajati")">Actualizare date</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Adaugare", "Angajati")">Adaugare angajati</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Stergere", "Angajati")">Stergere angajati</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Tiparire Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="printDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            TIPARIRE
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="printDropdown">
+                            <li><a class="dropdown-item" href="@Url.Action("StatPlata", "Tiparire")">Stat plata</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("Fluturasi", "Tiparire")">Fluturasi</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Modificare Procent -->
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link" href="@Url.Action("Index", "ModificareProcente")">MODIF_PROCENTE</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <div>
+                            <h6>Server time:</h6>
+                            <div id="currentDate"></div>
+                        </div>
                     </li>
                 </ul>
                 <partial name="_LoginPartial"/>
@@ -44,8 +74,52 @@
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Add this script to your JavaScript file or within a <script> tag in your HTML
+    $(document).ready(function() {
+        function fetchDate() {
+            $.ajax({
+                url: '/Home/Date',
+                method: 'GET',
+                success: function(data) {
+                    $('#currentDate').text(data);
+                },
+                error: function(error) {
+                    console.error('Error fetching date:', error);
+                }
+            });
+        }
+
+        // Fetch date every 1 seconds
+        //setInterval(fetchDate, 1);
+
+        // Initial fetch
+        fetchDate();
+        
+        // Background image change
+        const images = [
+            '@Url.Content("~/images/background1.jpg")',
+            '@Url.Content("~/images/background2.jpg")',
+            '@Url.Content("~/images/background3.jpg")'
+        ];
+        
+        let currentIndex = 0;
+
+        function changeBackgroundImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            $('.navbar').fadeOut(500, function() {
+                $(this).css('background-image', `url(${images[currentIndex]})`);
+                $(this).fadeIn(500);
+            });
+        }
+        //changeBackgroundImage();
+
+        //setInterval(changeBackgroundImage, 5000);
+    });
+</script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

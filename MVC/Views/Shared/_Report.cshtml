@@ -1,0 +1,121 @@
+﻿@model List<MVC.Entities.Angajat>
+
+<style>
+    .payroll-card {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+        background: #fff;
+    }
+
+    .payroll-header {
+        background-color: #2c3e50;
+        color: white;
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .payroll-title {
+        text-align: center;
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .payroll-date {
+        text-align: right;
+        margin: 5px 0 0;
+        font-size: 14px;
+    }
+
+    .payroll-table-container {
+        overflow-x: auto;
+    }
+
+    .payroll-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .payroll-table th,
+    .payroll-table td {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+    }
+
+    .payroll-table th {
+        background-color: #f5f6fa;
+        font-weight: bold;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .payroll-table tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    .payroll-table tbody tr:hover {
+        background-color: #f2f2f2;
+    }
+
+    .payroll-table td.number-cell {
+        text-align: right;
+    }
+
+    .payroll-table td.center-cell {
+        text-align: center;
+    }
+
+    .payroll-table tfoot {
+        background-color: #edf2f7;
+        font-weight: bold;
+    }
+
+    .payroll-table tfoot td {
+        border-top: 2px solid #ddd;
+    }
+    
+</style>
+
+<div class="payroll-card">
+    <div class="payroll-header">
+        <h4 class="payroll-title">STAT DE PLATA</h4>
+        <p class="payroll-date">DATA: @DateTime.Now.ToShortDateString()</p>
+    </div>
+    <div class="payroll-table-container">
+        <table class="payroll-table">
+            <thead>
+            <tr>
+                <th>NR.CRT</th>
+                <th>NUME</th>
+                <th>PRENUME</th>
+                <th>FUNCTIE</th>
+                <th>SALAR_BAZA</th>
+                <th>VIRAT_CARD</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="center-cell">@item.Id</td>
+                    <td>@item.Nume</td>
+                    <td>@item.Prenume</td>
+                    <td>@item.Functie</td>
+                    <td class="number-cell">@item.SalarBaza.ToString("N0")</td>
+                    <td class="number-cell">@item.ViratCard.ToString("N0")</td>
+                </tr>
+            }
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="4" class="number-cell">Total:</td>
+                <td class="number-cell">@Model.Sum(x => x.SalarBaza).ToString("N0")</td>
+                <td class="number-cell">@Model.Sum(x => x.ViratCard).ToString("N0")</td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+﻿@using MVC.Controllers
+@model List<MVC.Entities.Angajat>
+
+@{
+    Layout = "_Layout";
+}
+
+@await Html.PartialAsync("_Report", Model)
+<form asp-action="@nameof(TiparireController.StatPlata2Pdf)" method="post">
+    <button type="submit" class="btn btn-primary">Tipărește</button>
+</form>

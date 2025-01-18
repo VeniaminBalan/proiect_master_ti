@@ -1,0 +1,116 @@
+﻿@model List<MVC.Entities.Angajat>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center m-3">
+    <div>
+        <div class="card">
+            <div class="card-header text-center">
+                <h1>Lista Angajati</h1>
+            </div>
+
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>
+                            Nume
+                        </th>
+                        <th>
+                            Prenume
+                        </th>
+                        <th>
+                            Functie
+                        </th>
+                        <th>
+                            Salariu de baza
+                        </th>
+                        <th>
+                            Spor
+                        </th>
+                        <th>
+                            Premii brute
+                        </th>
+                        <th>
+                            Total brut
+                        </th>
+                        <th>
+                            Brut impozabil
+                        </th>
+                        <th>
+                            Impozit
+                        </th>
+                        <th>
+                            CAS
+                        </th>
+                        <th>
+                            CASS
+                        </th>
+                        <th>
+                            Retineri
+                        </th>
+                        <th>
+                            Virat pe card
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var angajat in Model)
+                    {
+                        <tr>
+                            <td>
+                                @angajat.Nume
+                            </td>
+                            <td>
+                                @angajat.Prenume
+                            </td>
+                            <td>
+                                @angajat.Functie
+                            </td>
+                            <td>
+                                @angajat.SalarBaza
+                            </td>
+                            <td>
+                                @angajat.SporProcentual
+                            </td>
+                            <td>
+                                @angajat.PremiiBrute
+                            </td>
+                            <td>
+                                @angajat.TotalBrut
+                            </td>
+                            <td>
+                                @angajat.BrutImpozitabil
+                            </td>
+                            <td>
+                                @angajat.Impozit
+                            </td>
+                            <td>
+                                @angajat.CAS
+                            </td>
+                            <td>
+                                @angajat.CASS
+                            </td>
+                            <td>
+                                @angajat.Retineri
+                            </td>
+                            <td>
+                                @angajat.ViratCard
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Detalii", "Angajati", new { id = angajat.Id })" class="btn btn-primary">Detalii</a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer text-center">
+                <a href="@Url.Action("Adaugare", "Angajati")" class="btn btn-primary">Adauga</a>
+            </div>
+        </div>
+    </div>
+</div>

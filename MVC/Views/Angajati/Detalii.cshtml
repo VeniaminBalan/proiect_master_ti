@@ -1,0 +1,38 @@
+﻿@model MVC.Entities.Angajat
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="card-header text-center">
+                <h1>@Model?.Nume</h1>
+            </div>
+
+            <div class="card-body text-center">
+                <h4>Id Angajat : @Model?.Id</h4>
+                <h4>Nume : @Model?.Nume</h4>
+                <h4>Prenume : @Model?.Prenume</h4>
+                <h4>Functie : @Model?.Functie</h4>
+                <h4>Salariu de baza : @Model?.SalarBaza</h4>
+                <h4>Spor : @Model?.SporProcentual</h4>
+                <h4>Premii brute : @Model?.PremiiBrute</h4>
+                <h4>Total brut : @Model?.TotalBrut</h4>
+                <h4>Brut impozabil : @Model?.BrutImpozitabil</h4>
+                <h4>Impozit (10%) : @Model?.Impozit</h4>
+                <h4>CAS (25%) : @Model?.CAS</h4>
+                <h4>CASS (10%) : @Model?.CASS</h4>
+                <h4>Retineri : @Model?.Retineri</h4>
+                <h4>Virat pe card : @Model?.ViratCard</h4>
+                
+            </div>
+            <div class="card-footer text-center">
+                <a href="#" class="btn btn-primary">Back</a>
+                <a href="#" class="btn btn-primary">Edit</a>
+                <a href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>

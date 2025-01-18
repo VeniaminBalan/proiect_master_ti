@@ -1,0 +1,15 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using MVC.Controllers
+@model List<MVC.Entities.Angajat>
+
+@{
+    Layout = "_Layout";
+    TempData["searchTerm"] = Context.Request.Query["searchTerm"];
+}
+
+@await Html.PartialAsync("_SearchForm")
+@await Html.PartialAsync("_Fluturasi", Model)
+<form action="@nameof(TiparireController.Fluturasi2Pdf)" method="post">
+    <input type="hidden" name="searchTerm" value="@TempData["searchTerm"]" />
+    <button type="submit" class="btn btn-primary">Tipărește</button>
+</form>
