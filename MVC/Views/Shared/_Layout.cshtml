@@ -50,6 +50,10 @@
                         <a class="nav-link" href="@Url.Action("Index", "ModificareProcente")">MODIF_PROCENTE</a>
                     </li>
                     
+                    <li>
+                        <img id="image" />
+                    </li>
+                    
                     <li class="nav-item">
                         <div>
                             <h6>Server time:</h6>
@@ -94,7 +98,7 @@
         }
 
         // Fetch date every 1 seconds
-        //setInterval(fetchDate, 1);
+        setInterval(fetchDate, 1);
 
         // Initial fetch
         fetchDate();
@@ -108,16 +112,18 @@
         
         let currentIndex = 0;
 
+        const $image = $('#image');
+        
         function changeBackgroundImage() {
             currentIndex = (currentIndex + 1) % images.length;
-            $('.navbar').fadeOut(500, function() {
-                $(this).css('background-image', `url(${images[currentIndex]})`);
+            $image.fadeOut(500, function() {
+                $(this).css('src', `url(${images[currentIndex]})`);
                 $(this).fadeIn(500);
             });
         }
-        //changeBackgroundImage();
+        changeBackgroundImage();
 
-        //setInterval(changeBackgroundImage, 5000);
+        setInterval(changeBackgroundImage, 5000);
     });
 </script>
 @await RenderSectionAsync("Scripts", required: false)
