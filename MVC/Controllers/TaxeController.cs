@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC.Data;
 using MVC.Models;
@@ -10,10 +11,12 @@ namespace MVC.Controllers;
 public class TaxeController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly string _password;
     
-    public TaxeController(ApplicationDbContext context)
+    public TaxeController(ApplicationDbContext context, IConfiguration configuration)
     {
         _context = context;
+        _password = configuration.GetSection("AdminPassword").Value ?? throw new ArgumentNullException("AdminPassword");
     }
     
     [HttpGet]
@@ -25,11 +28,31 @@ public class TaxeController : Controller
     }
     
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Index(UpdateTaxeViewModel model)
+    public IActionResult Index([FromBody]UpdateTaxeViewModel model)
     {
+        Console.WriteLine(JsonSerializer.Serialize(model));
+        
+        if(model.Password != _password)
+            return Unauthorized();
+        
         if (!ModelState.IsValid)
-            return RedirectToAction("Index");
+        {
+            var errors = ModelState
+                .Where(ms => ms.Value?.Errors.Count > 0)
+                .Select(ms => new
+                {
+                    Field = ms.Key,
+                    Errors = ms.Value?.Errors.Select(e => e.ErrorMessage).ToArray()
+                })
+                .ToArray();
+
+            return BadRequest(new
+            {
+                success = false,
+                message = "Validation errors occurred.",
+                errors
+            });
+        }
         
         var taxe = _context.Taxe.FirstOrDefault();
         
@@ -42,6 +65,6 @@ public class TaxeController : Controller
             
         _context.SaveChanges();
         
-        return View(taxe);
+        return Ok(taxe);
     }
 }

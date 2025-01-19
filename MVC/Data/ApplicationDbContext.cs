@@ -20,5 +20,7 @@ public class ApplicationDbContext : IdentityDbContext
         base.OnModelCreating(modelBuilder);
         
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        
+        
     }
 }

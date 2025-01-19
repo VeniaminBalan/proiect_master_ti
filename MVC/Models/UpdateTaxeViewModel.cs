@@ -10,4 +10,7 @@ public class UpdateTaxeViewModel
     public int CASS { get; set; }
     [Range(0, 100, ErrorMessage = "Impozitul trebuie să fie între 0% și 100%.")]
     public int Impozit { get; set; }
+
+    [Required]
+    public string Password { get; init; }
 }

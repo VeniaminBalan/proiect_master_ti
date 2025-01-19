@@ -24,5 +24,10 @@ public class TaxeConfigurations : IEntityTypeConfiguration<Taxe>
         builder.Property(b => b.CASS)
             .HasConversion(new PercentageConverter())
             .IsRequired();
+
+        builder.HasData(
+            [
+                new Taxe(new Percentage(25), new Percentage(10), new Percentage(10), 1)
+            ]);
     }
 }

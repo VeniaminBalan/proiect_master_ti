@@ -8,34 +8,120 @@
 
 <div class="container mt-5">
     <h2>Edit Taxe</h2>
-    <form asp-action="@nameof(TaxeController.Index)" method="post" class="needs-validation" novalidate>
+    <form id="taxeForm" method="post">
         <!-- CAS -->
         <div class="mb-3">
-            <label asp-for="CAS" class="form-label">CAS (%)</label>
-            <input asp-for="CAS" class="form-control" type="number" step="1" min="0" max="100" required value="@Model.CAS.Value"/>
-            <span asp-validation-for="CAS" class="text-danger"></span>
+            <label for="CAS" class="form-label">CAS (%)</label>
+            <input id="CAS" name="CAS" class="form-control" type="number" step="1" min="0" max="100" required value="@Model.CAS.Value"/>
         </div>
 
         <!-- CASS -->
         <div class="mb-3">
-            <label asp-for="CASS" class="form-label">CASS (%)</label>
-            <input asp-for="CASS" class="form-control" type="number" step="1" min="0" max="100" required value="@Model.CASS.Value" />
-            <span asp-validation-for="CASS" class="text-danger"></span>
+            <label for="CASS" class="form-label">CASS (%)</label>
+            <input id="CASS" name="CASS" class="form-control" type="number" step="1" min="0" max="100" required value="@Model.CASS.Value"/>
         </div>
 
         <!-- Impozit -->
         <div class="mb-3">
-            <label asp-for="Impozit" class="form-label">Impozit (%)</label>
-            <input asp-for="Impozit" class="form-control" type="number" step="1" min="0" max="100" required value="@Model.Impozit.Value"/>
-            <span asp-validation-for="Impozit" class="text-danger"></span>
+            <label for="Impozit" class="form-label">Impozit (%)</label>
+            <input id="Impozit" name="Impozit" class="form-control" type="number" step="1" min="0" max="100" required value="@Model.Impozit.Value" />
         </div>
 
-        <!-- Buttons -->
-        <button type="submit" class="btn btn-primary">Save</button>
+        <!-- Password -->
+        <div class="mb-3">
+            <label for="Password" class="form-label">Password</label>
+            <input id="Password" name="Password" class="form-control" type="password" required />
+        </div>
+
+        <!-- Submit Button -->
+        <button type="button" class="btn btn-primary" onclick="submitTaxeForm()">Save</button>
     </form>
+
+    <div id="notificationBar" class="alert" role="alert" style="display: none;"></div>
 </div>
 
+<script>
+    async function submitTaxeForm() {
+        const form = document.getElementById('taxeForm');
+        const formData = new FormData(form);
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+        console.log('Form data:', formData);
+        
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+        
+        console.log('Data:', data);
+    
+        try {
+            const response = await fetch('/ModificareProcente', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            });
+            
+            
+            if (response.ok) {
+                showNotification('success', 'Taxe updated successfully!');
+            }else if (response.status === 401) {
+                // Unauthorized
+                showNotification('danger', 'Unauthorized: Incorrect password.');
+            }else if (response.status === 400)
+            {
+                
+                const jsonResult = await response.json();
+                console.log('Response:', jsonResult);
+                displayValidationErrors(jsonResult.errors);
+            }
+        } catch (error) {
+            console.error('An unexpected error occurred:', error);
+            showNotification('danger', 'An unexpected error occurred.');
+        }
+    }
+
+    function showNotification(type, message) {
+        const notificationBar = document.getElementById('notificationBar');
+        notificationBar.style.display = 'block';
+        notificationBar.className = `alert alert-${type}`;
+        notificationBar.textContent = message;
+        
+        setTimeout(() => {
+            notificationBar.style.display = 'none';
+        }, 5000);
+    }
+
+    function displayValidationErrors(errors) {
+        document.querySelectorAll('.form-control').forEach((input) => {
+            input.classList.remove('is-invalid');
+        });
+
+        document.querySelectorAll('.error-message').forEach((errorSpan) => {
+            errorSpan.remove();
+        });
+        
+        errors.forEach((error) => {
+            const fieldName = error.field;
+            const errorMessages = error.errors.join(', ');
+            
+            const inputField = document.querySelector(`[name="${fieldName}"]`);
+
+            if (inputField) {
+                inputField.classList.add('is-invalid');
+                
+                const errorSpan = document.createElement('span');
+                errorSpan.className = 'error-message text-danger small';
+                errorSpan.innerText = errorMessages;
+                
+                inputField.parentNode.appendChild(errorSpan);
+            } else {
+                console.warn(`Field not found in form: ${fieldName}`);
+            }
+        });
+        
+        showNotification('danger', 'Please correct the highlighted errors and try again.');
+    }
+</script>
+

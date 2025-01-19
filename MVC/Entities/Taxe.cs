@@ -8,7 +8,7 @@ public class Taxe : BaseEntity<int>
     public Percentage CASS { get; set; }
     public Percentage Impozit { get; set; }
     
-    public Taxe(Percentage cas, Percentage cass, Percentage impozit)
+    public Taxe(Percentage cas, Percentage cass, Percentage impozit, int id) : base(id)
     {
         CAS = cas;
         CASS = cass;
