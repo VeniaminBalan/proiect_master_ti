@@ -33,8 +33,6 @@
                             <li><a class="dropdown-item" href="@Url.Action("Stergere", "Angajati")">Stergere angajati</a></li>
                         </ul>
                     </li>
-
-                    <!-- Tiparire Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="printDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             TIPARIRE
@@ -44,21 +42,17 @@
                             <li><a class="dropdown-item" href="@Url.Action("Fluturasi", "Tiparire")">Fluturasi</a></li>
                         </ul>
                     </li>
-
-                    <!-- Modificare Procent -->
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Index", "ModificareProcente")">MODIF_PROCENTE</a>
                     </li>
-                    
-                    <li>
-                        <img id="image" />
-                    </li>
-                    
                     <li class="nav-item">
                         <div>
                             <h6>Server time:</h6>
                             <div id="currentDate"></div>
                         </div>
+                    </li>
+                    <li class="nav-item d-flex align-items-center justify-content-end">
+                        <img id="rotatingImage" src="@Url.Content("~/images/background1.jpg")" alt="Rotating Image" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;" />
                     </li>
                 </ul>
                 <partial name="_LoginPartial"/>
@@ -98,7 +92,7 @@
         }
 
         // Fetch date every 1 seconds
-        setInterval(fetchDate, 1);
+        setInterval(fetchDate, 1000);
 
         // Initial fetch
         fetchDate();
@@ -109,21 +103,21 @@
             '@Url.Content("~/images/background2.jpg")',
             '@Url.Content("~/images/background3.jpg")'
         ];
-        
-        let currentIndex = 0;
 
-        const $image = $('#image');
-        
-        function changeBackgroundImage() {
+        let currentIndex = 0;
+        const rotatingImage = $('#rotatingImage');
+
+        function changeImage() {
+            // Update the image's src attribute
             currentIndex = (currentIndex + 1) % images.length;
-            $image.fadeOut(500, function() {
-                $(this).css('src', `url(${images[currentIndex]})`);
-                $(this).fadeIn(500);
+            rotatingImage.fadeOut(500, function() {
+                rotatingImage.attr('src', images[currentIndex]);
+                rotatingImage.fadeIn(500);
             });
         }
-        changeBackgroundImage();
 
-        setInterval(changeBackgroundImage, 5000);
+        // Change the image every 1 second
+        setInterval(changeImage, 5000);
     });
 </script>
 @await RenderSectionAsync("Scripts", required: false)
